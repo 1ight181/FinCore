@@ -15,11 +15,12 @@ if TYPE_CHECKING:
 class Account(BaseModel, TimestampMixin):
     __tablename__ = "accounts"
 
+
     __table_args__ = (
         CheckConstraint(
             "balance >= 0",
             name="positive_balance"
-        )
+        ),
     )
 
 
