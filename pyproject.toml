@@ -11,4 +11,6 @@ dependencies = [
     "sqlalchemy",
     "alembic",
     "asyncpg",
+    "pyjwt",
+    "python-dotenv",
 ]
