@@ -22,12 +22,6 @@ class RevokedToken(BaseModel):
     )
 
     expires_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-    )
-
-    revoked_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        server_default=func.now(),
+        DateTime(timezone=True),
         nullable=False,
     )

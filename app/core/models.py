@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from uuid import uuid4, UUID as MappedUUID
 
-from sqlalchemy import func, UUID
+from sqlalchemy import func, UUID, DateTime
 from sqlalchemy.orm import DeclarativeBase, mapped_column, Mapped
 
 
@@ -21,11 +21,13 @@ class BaseModel(Base):
 
 class TimestampMixin:
     created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         server_default=func.now(),
         nullable=False
     )
 
     updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.now(),
         nullable=False
