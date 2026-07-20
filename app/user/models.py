@@ -1,18 +1,13 @@
-from enum import Enum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum as SQLEnum, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.models import BaseModel, TimestampMixin
+from app.user.role import UserRole
 
 if TYPE_CHECKING:
     from app.account.models import Account
-
-
-class UserRole(str, Enum):
-    USER = "user"
-    ADMIN = "admin"
 
 
 class User(BaseModel, TimestampMixin):
