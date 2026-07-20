@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, async_sessionmaker, AsyncSession
 
@@ -12,7 +10,7 @@ class Database:
         config: DatabaseConfig,
     ):
         self._engine: AsyncEngine = create_async_engine(
-            config.get_postgres_dsn(),
+            config.postgres_dsn,
             pool_pre_ping=True,
         )
 
