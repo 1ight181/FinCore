@@ -1,6 +1,8 @@
+from uuid import uuid4
+
 import jwt
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from typing import Dict
 from sanic.exceptions import Unauthorized
 
@@ -10,14 +12,21 @@ from pwdlib import PasswordHash
 
 
 
-def create_access_token(subject: str, expires_delta: timedelta | None = None) -> str:
+def create_access_token(subject: str, expires_delta: timedelta = None) -> dict:
     if expires_delta is None:
-        expires_delta = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expires_delta = timedelta(minutes=60 * 24 * 7)
 
-    expire = datetime.now() + expires_delta
-    to_encode = {"exp": expire, "sub": str(subject)}
+    expire = datetime.now(UTC) + expires_delta
+    jti = str(uuid4())
 
-    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
+    to_encode = {
+        "exp": expire,
+        "sub": str(subject),
+        "jti": jti
+    }
+
+    token = jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
+    return {"access_token": token, "jti": jti, "expires_at": expire}
 
 
 def decode_access_token(token: str) -> Dict:
