@@ -13,4 +13,5 @@ dependencies = [
     "asyncpg",
     "pyjwt",
     "python-dotenv",
+    "pwdlib"
 ]
