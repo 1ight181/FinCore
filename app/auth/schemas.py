@@ -1,7 +1,5 @@
 # login
-from pydantic import EmailStr, Field
-
-from app.core.models import BaseModel
+from pydantic import EmailStr, Field, BaseModel
 
 
 class LoginRequest(BaseModel):

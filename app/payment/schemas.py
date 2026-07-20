@@ -2,9 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import ConfigDict
-
-from app.core.models import BaseModel
+from pydantic import ConfigDict, BaseModel
 
 
 class PaymentResponse(BaseModel):
