@@ -13,6 +13,7 @@ from app.core.models import Base
 from app.user.models import User
 from app.account.models import Account
 from app.payment.models import Payment
+from app.auth.models import RevokedToken
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
