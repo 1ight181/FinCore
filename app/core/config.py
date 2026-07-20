@@ -28,6 +28,10 @@ class Settings(BaseSettings):
 
     debug: bool = True
 
+    jwt_secret_key: str
+    webhook_secret_key: str
+    access_token_expire_minutes: int
+
     db: DatabaseConfig
 
 settings = Settings()
