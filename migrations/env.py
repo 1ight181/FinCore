@@ -20,7 +20,7 @@ config = context.config
 
 config.set_main_option(
     "sqlalchemy.url",
-    settings.db_settings.get_postgres_dsn()
+    settings.db.postgres_dsn
 )
 
 # Interpret the config file for Python logging.
