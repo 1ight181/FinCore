@@ -4,7 +4,7 @@ authors = [{name = "light181", email = "danil.odinzov181@gmail.com"}]
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi",
+    "sanic",
     "uvicorn",
     "pydantic",
     "pydantic-settings",
