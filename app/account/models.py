@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Numeric, CheckConstraint
+from sqlalchemy import ForeignKey, Numeric, CheckConstraint, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.models import BaseModel, TimestampMixin
@@ -24,7 +24,7 @@ class Account(BaseModel, TimestampMixin):
     )
 
 
-    user_id: Mapped[int] = mapped_column(
+    user_id: Mapped[UUID] = mapped_column(
         ForeignKey(
             "users.id",
             ondelete="CASCADE"

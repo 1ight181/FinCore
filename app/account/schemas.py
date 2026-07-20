@@ -1,15 +1,15 @@
+from uuid import UUID
+
 from pydantic import Field
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import ConfigDict
-
-from app.core.models import BaseModel
+from pydantic import ConfigDict, BaseModel
 
 
 class AccountResponse(BaseModel):
-    id: int
-    user_id: int
+    id: UUID
+    user_id: UUID
     balance: Decimal = Field(..., ge=0)
     created_at: datetime
 

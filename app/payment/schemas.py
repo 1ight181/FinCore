@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+from uuid import UUID
 
 from pydantic import ConfigDict
 
@@ -7,7 +8,7 @@ from app.core.models import BaseModel
 
 
 class PaymentResponse(BaseModel):
-    id: int
+    id: UUID
     transaction_id: str
     account_id: int
     amount: Decimal
