@@ -12,7 +12,7 @@ from pwdlib import PasswordHash
 
 
 
-def create_access_token(subject: str, expires_delta: timedelta = None) -> dict:
+def create_access_token(subject: str, expires_delta: timedelta | None = None) -> str:
     if expires_delta is None:
         expires_delta = settings.access_token_expire_minutes
 
@@ -26,7 +26,7 @@ def create_access_token(subject: str, expires_delta: timedelta = None) -> dict:
     }
 
     token = jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
-    return {"access_token": token, "jti": jti, "expires_at": expire}
+    return token
 
 
 def decode_access_token(token: str) -> Dict:
