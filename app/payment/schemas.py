@@ -2,13 +2,13 @@ from datetime import datetime
 from decimal import Decimal
 from uuid import UUID
 
-from pydantic import ConfigDict, BaseModel
+from pydantic import ConfigDict, BaseModel, Field
 
 
 class PaymentResponse(BaseModel):
     id: UUID
     transaction_id: str
-    account_id: int
+    account_id: UUID
     amount: Decimal
     created_at: datetime
 
@@ -22,8 +22,8 @@ class PaymentListResponse(BaseModel):
 
 class WebhookPaymentRequest(BaseModel):
     transaction_id: str = Field(..., min_length=1, max_length=255)
-    user_id: int
-    account_id: int
+    user_id: UUID
+    account_id: UUID
     amount: Decimal = Field(..., gt=0)
     signature: str = Field(..., min_length=64, max_length=64)
 
