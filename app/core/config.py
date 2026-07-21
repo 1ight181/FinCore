@@ -2,11 +2,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class DatabaseConfig(BaseSettings):
-    user: str
-    password: str
-    host: str
-    port: int
-    database_name : str
+    user: str = "postgres"
+    password: str = ""
+    host: str = "localhost"
+    port: int = 5432
+    database_name : str = "FinCore"
 
     @property
     def postgres_dsn(self) -> str:
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
 
     jwt_secret_key: str
     webhook_secret_key: str
-    access_token_expire_minutes: int
+    access_token_expire_minutes: int = 30
     jwt_scheduler_task_interval_hours: int = 1
 
     db: DatabaseConfig
