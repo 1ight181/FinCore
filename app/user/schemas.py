@@ -3,7 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field, EmailStr, ConfigDict
 
-from app.account.schemas import AccountResponse
+from app.account.schemas import AccountResponseWithPayments
 from app.user.role import UserRole
 
 
@@ -33,7 +33,7 @@ class UserResponse(UserBase):
 
 
 class UserWithAccountsResponse(UserResponse):
-    accounts: list[AccountResponse]
+    accounts: list[AccountResponseWithPayments]
 
 
 class UserListResponse(BaseModel):
