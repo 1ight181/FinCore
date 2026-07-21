@@ -14,7 +14,7 @@ from pwdlib import PasswordHash
 
 def create_access_token(subject: str, expires_delta: timedelta = None) -> dict:
     if expires_delta is None:
-        expires_delta = timedelta(minutes=60 * 24 * 7)
+        expires_delta = settings.access_token_expire_minutes
 
     expire = datetime.now(UTC) + expires_delta
     jti = str(uuid4())
