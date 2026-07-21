@@ -1,10 +1,8 @@
 from typing import TypeVar, Type, Any
 from uuid import UUID
 
-from app.account.models import Account
 from app.core.models import BaseModel
-from app.payment.models import Payment
-from app.user.models import User
+
 
 BaseType = TypeVar("BaseType", bound=BaseModel)
 
@@ -36,21 +34,6 @@ class EntityNotFoundError(Exception):
 
     def __str__(self) -> str:
         return self.message
-
-
-class UserNotFoundError(EntityNotFoundError):
-    def __init__(self, user_id: UUID):
-        super().__init__(User, user_id)
-
-
-class AccountNotFoundError(EntityNotFoundError):
-    def __init__(self, node_id: UUID):
-        super().__init__(Account, node_id)
-
-
-class PaymentNotFoundError(EntityNotFoundError):
-    def __init__(self, root_id: UUID):
-        super().__init__(Payment, root_id)
 
 
 class EntityAlreadyExistsError(Exception):
@@ -93,16 +76,7 @@ class EntityAlreadyExistsError(Exception):
         return self.message
 
 
-class UserAlreadyExistsError(EntityAlreadyExistsError):
-    def __init__(self, fields: dict[str, Any]):
-        super().__init__(User, fields)
 
 
-class AccountAlreadyExistsError(EntityAlreadyExistsError):
-    def __init__(self, fields: dict[str, Any]):
-        super().__init__(Account, fields)
 
 
-class PaymentAlreadyExistsError(EntityAlreadyExistsError):
-    def __init__(self, fields: dict[str, Any]):
-        super().__init__(Payment, fields)
