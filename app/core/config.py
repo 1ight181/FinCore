@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     jwt_secret_key: str
     webhook_secret_key: str
     access_token_expire_minutes: int
+    jwt_scheduler_task_interval_hours: int = 1
 
     db: DatabaseConfig
 
