@@ -1,8 +1,11 @@
 from sanic import Request
-from sanic.exceptions import Unauthorized
+from sanic.exceptions import Unauthorized, Forbidden
+
+from app.auth.types import CurrentUser, AdminUser
 from app.user.models import User
-from app.user.services import UserService
 from app.auth.security import decode_access_token
+from app.user.role import UserRole
+from app.user.service import UserService
 
 
 async def get_current_user(
@@ -31,3 +34,13 @@ async def get_current_user(
         raise Unauthorized("User not found")
 
     return user
+
+
+async def require_admin(
+    current_user: CurrentUser,
+) -> AdminUser:
+
+    if current_user.role != UserRole.ADMIN:
+        raise Forbidden()
+
+    return AdminUser(current_user)
