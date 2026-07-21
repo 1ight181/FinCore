@@ -12,7 +12,7 @@ ModelType = TypeVar("ModelType", bound=BaseModel)
 
 
 class BaseRepository(Generic[ModelType]):
-    def __init__(self, session: AsyncSession, model: type[ModelType], constraint_registry: ConstraintRegistry):
+    def __init__(self, session: AsyncSession, model: type[ModelType], constraint_registry: ConstraintRegistry | None = None):
         self.session = session
         self.model = model
         self.constraint_registry = constraint_registry
@@ -29,6 +29,9 @@ class BaseRepository(Generic[ModelType]):
             await self.session.flush()
         except IntegrityError as exc:
             constraint_name = getattr(exc.orig, "constraint_name", None)
+            if not self.constraint_registry:
+                raise EntityAlreadyExistsError(type(new))
+
             fields = self.constraint_registry.get_fields_for_unique_constraint(constraint_name)
             fields_with_values = {field: getattr(new, field) for field in fields}
 
