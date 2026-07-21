@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sanic import Request
 from sanic.exceptions import Unauthorized, Forbidden
 
@@ -24,7 +26,7 @@ async def get_current_user(
         raise Unauthorized("Invalid token payload")
 
     try:
-        user_id = int(str(user_id))
+        user_id = UUID(str(user_id))
     except ValueError:
         raise Unauthorized("Invalid token")
 
