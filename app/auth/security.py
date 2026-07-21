@@ -29,7 +29,7 @@ def create_access_token(subject: str, expires_delta: timedelta | None = None) ->
     return token
 
 
-def decode_access_token(token: str) -> Dict:
+def decode_access_token(token: str) -> dict:
     try:
         payload = jwt.decode(
             token,
