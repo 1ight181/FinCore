@@ -15,6 +15,8 @@ from app.payment.exceptions import (
 from app.payment.models import Payment
 from app.payment.repo import PaymentRepository
 from app.payment.schemas import WebhookPaymentRequest
+from app.user.models import User
+from app.user.repo import UserRepository
 
 
 class PaymentService:
@@ -23,9 +25,11 @@ class PaymentService:
         self,
         payment_repo: PaymentRepository,
         account_repo: AccountRepository,
+        user_repo: UserRepository,
     ):
         self.payment_repo = payment_repo
         self.account_repo = account_repo
+        self.user_repo = user_repo
 
     async def get_by_id(
             self,
@@ -71,13 +75,18 @@ class PaymentService:
                 }
             )
 
+        user = await self.user_repo.get_by_id(data.user_id)
+        if not user:
+            raise EntityNotFoundError(User, data.user_id)
 
         account = await self.account_repo.get_by_id(
             data.account_id
         )
 
-        if not account:
-
+        if account:
+            if account.user_id != data.user_id:
+                raise EntityNotFoundError(Account, data.account_id)
+        else:
             account = Account(
                 id=data.account_id,
                 user_id=data.user_id,
