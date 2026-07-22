@@ -4,6 +4,8 @@ import hmac
 from decimal import Decimal
 from uuid import UUID
 
+from sanic import Forbidden
+
 from app.account.models import Account
 from app.account.repo import AccountRepository
 from app.core.config import settings
@@ -85,7 +87,7 @@ class PaymentService:
 
         if account:
             if account.user_id != data.user_id:
-                raise EntityNotFoundError(Account, data.account_id)
+                raise Forbidden("User not allowed")
         else:
             account = Account(
                 id=data.account_id,
