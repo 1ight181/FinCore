@@ -299,3 +299,4 @@ docker-compose.override.yml
 *.swo
 *.bak
 *.tmp
+/.env
