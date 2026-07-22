@@ -63,8 +63,9 @@ async def create_user(
     user_service: UserService,
     __: AdminUser,
 ):
-    data = AdminCreateUserRequest.model_validate(request.json)
-    user = await user_service.create_user(data)
+    data = UserCreateRequest.model_validate(
+        request.json
+    )
 
     return JSONResponse(UserResponse.model_validate(user).model_dump(), status=201)
 

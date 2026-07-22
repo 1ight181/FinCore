@@ -8,7 +8,7 @@ from app.core.transaction_manager import TransactionManager
 from app.user.exceptions import UserNotFoundError
 from app.user.models import User
 from app.user.repo import UserRepository
-from app.user.schemas import AdminCreateUserRequest, UserUpdateRequest
+from app.user.schemas import UserUpdateRequest, UserCreateRequest
 
 
 class UserService:
@@ -16,7 +16,7 @@ class UserService:
         self.user_repo = user_repo
         self.account_repo = account_repo
 
-    async def create_user(self, data: AdminCreateUserRequest, transaction_manager: TransactionManager) -> User:
+    async def create_user(self, data: UserCreateRequest, transaction_manager: TransactionManager) -> User:
         async with transaction_manager.begin():
             password_hash = hash_password(data.password)
 
