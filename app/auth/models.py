@@ -19,7 +19,6 @@ class RevokedToken(BaseModel):
 
     token_jti: Mapped[str] = mapped_column(
         String(255),
-        primary_key=True,
     )
 
     user_id: Mapped[UUID] = mapped_column(

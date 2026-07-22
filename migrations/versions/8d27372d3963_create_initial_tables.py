@@ -47,7 +47,8 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('expires_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('token_jti'),
+    sa.Column('id', sa.UUID(), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('token_jti', name='uq_revoked_tokens_token_jti')
     )
     op.create_table('payments',
