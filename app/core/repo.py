@@ -29,10 +29,14 @@ class BaseRepository(Generic[ModelType]):
             await self.session.flush()
         except IntegrityError as exc:
             constraint_name = getattr(exc.orig, "constraint_name", None)
-            if not self.constraint_registry:
+            if not self.constraint_registry or constraint_name is None:
                 raise EntityAlreadyExistsError(type(new))
 
-            fields = self.constraint_registry.get_fields_for_unique_constraint(constraint_name)
+            try:
+                fields = self.constraint_registry.get_fields_for_unique_constraint(constraint_name)
+            except KeyError:
+                raise EntityAlreadyExistsError(type(new))
+
             fields_with_values = {field: getattr(new, field) for field in fields}
 
             raise EntityAlreadyExistsError(type(new), fields_with_values)
