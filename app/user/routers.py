@@ -8,11 +8,11 @@ from app.account.services import AccountService
 from app.auth.types import CurrentUser, AdminUser
 from app.core.transaction_manager import TransactionManager
 from app.payment.service import PaymentService
+from app.user.exceptions import UserNotFoundError
 from app.user.schemas import (
     UserResponse,
     UserListResponse,
-    UserWithAccountsResponse,
-    UserUpdateRequest, UserCreateRequest, UserCreateRequestDocModel, UserListResponseDocModel,
+    UserWithAccountsResponse,    UserUpdateRequest, UserCreateRequest, UserCreateRequestDocModel, UserListResponseDocModel,
     UserWithAccountsResponseDocModel,
 )
 from app.account.schemas import AccountListResponse, AccountListResponseDocModel
@@ -254,6 +254,8 @@ async def get_user(
     ___: AdminUser,
 ):
     user = await user_service.get_by_id(user_id)
+    if not user:
+        raise UserNotFoundError(user_id)
 
     return json(
         UserWithAccountsResponse
