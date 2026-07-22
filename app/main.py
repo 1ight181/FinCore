@@ -30,6 +30,8 @@ def create_app() -> Sanic:
 
     app.blueprint(auth_bp)
     app.blueprint(user_bp)
+    app.blueprint(payment_bp)
+    app.blueprint(admin_bp)
 
     setup_middlewares(app)
     setup_listeners(app)
