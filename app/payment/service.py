@@ -58,9 +58,7 @@ class PaymentService:
         data: WebhookPaymentRequest,
     ) -> Payment:
 
-
         self._verify_signature(data)
-
 
         existing = await self.payment_repo.get_by_transaction_id(
             data.transaction_id
