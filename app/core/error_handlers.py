@@ -2,7 +2,7 @@ import logging
 
 from jwt import InvalidTokenError
 from pydantic import ValidationError
-from sanic import Sanic, json, Forbidden, Unauthorized, NotFound
+from sanic import Sanic, json, Forbidden, Unauthorized, NotFound, BadRequest
 from sqlalchemy.exc import IntegrityError
 
 from app.core.exceptions import EntityNotFoundError, EntityAlreadyExistsError
@@ -86,6 +86,23 @@ def setup_error_handlers(app: Sanic) -> None:
         return json(
             {
                 "error": "db_error",
+            },
+            status=500,
+        )
+
+    @app.exception(BadRequest)
+    async def handle_bad_request(
+            _,
+            exception,
+    ):
+        logger.error(
+            "Bad request",
+            exc_info=exception,
+        )
+
+        return json(
+            {
+                "error": "bad_request",
             },
             status=500,
         )
