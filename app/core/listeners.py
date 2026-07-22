@@ -26,7 +26,7 @@ def setup_listeners(app: Sanic):
         app.ctx.db = db
 
     @app.after_server_start
-    async def after_startup(app: Sanic):
+    async def after_startup(_: Sanic):
         logger.info("Sanic app started")
 
     @app.after_server_stop
@@ -38,4 +38,3 @@ def setup_listeners(app: Sanic):
             raise
 
         logger.info(f"Sanic app stopped")
-

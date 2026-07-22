@@ -2,7 +2,7 @@ import logging
 
 from jwt import InvalidTokenError
 from pydantic import ValidationError
-from sanic import Sanic, json, SanicException, Forbidden, Unauthorized
+from sanic import Sanic, json, Forbidden, Unauthorized
 from sqlalchemy.exc import IntegrityError
 
 from app.core.exceptions import EntityNotFoundError, EntityAlreadyExistsError
