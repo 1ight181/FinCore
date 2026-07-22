@@ -61,3 +61,6 @@ class AuthService:
         await self.revoked_token_repo.create(
             revoked_token
         )
+
+    async def is_token_revoked(self, jti: str) -> bool:
+        return await self.revoked_token_repo.is_revoked(jti)

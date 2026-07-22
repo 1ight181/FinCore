@@ -3,6 +3,7 @@ from uuid import UUID
 from sanic import Request
 from sanic.exceptions import Unauthorized, Forbidden
 
+from app.auth.services import AuthService
 from app.auth.types import CurrentUser, AdminUser
 from app.user.models import User
 from app.auth.security import decode_access_token
@@ -12,7 +13,8 @@ from app.user.service import UserService
 
 async def get_current_user(
     request: Request,
-    service: UserService,
+    user_service: UserService,
+    auth_service: AuthService,
 ) -> User:
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
@@ -30,10 +32,18 @@ async def get_current_user(
     except ValueError:
         raise Unauthorized("Invalid token")
 
-    user = await service.get_by_id(user_id)
+    user = await user_service.get_by_id(user_id)
 
     if not user:
         raise Unauthorized("User not found")
+
+    jti = payload.get("jti", None)
+    if not jti:
+        raise Unauthorized("Invalid token")
+
+    is_token_revoked = await auth_service.is_token_revoked(str(jti))
+    if is_token_revoked:
+        raise Unauthorized("Token revoked")
 
     return user
 
