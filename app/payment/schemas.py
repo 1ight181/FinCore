@@ -53,8 +53,6 @@ class WebhookPaymentRequestDocModel(BaseModel):
     })
     signature: str = Field(..., min_length=64, max_length=64)
 
-    model_config = ConfigDict(extra="forbid")
-
 
 class WebhookSuccessResponse(BaseModel):
     status: str = "success"
