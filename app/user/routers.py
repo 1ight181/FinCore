@@ -76,7 +76,7 @@ async def get_my_accounts(
     account_service: AccountService,
 ):
     accounts = await account_service.get_user_accounts(
-        current_user.id
+        current_user.user.id
     )
 
     return json(
@@ -109,7 +109,7 @@ async def get_my_payments(
     payment_service: PaymentService,
 ):
     payments = await payment_service.get_user_payments(
-        current_user.id
+        current_user.user.id
     )
 
     payment_list_response = PaymentListResponse(
@@ -205,7 +205,6 @@ async def create_user(
 )
 async def get_users(
     _,
-    __: User,
     user_service: UserService,
     ___: AdminUser,
 ):

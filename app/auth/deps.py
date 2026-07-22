@@ -52,7 +52,7 @@ async def require_admin(
     current_user: CurrentUser,
 ) -> AdminUser:
 
-    if current_user.role != UserRole.ADMIN:
+    if current_user.user.role != UserRole.ADMIN:
         raise Forbidden()
 
-    return AdminUser(current_user)
+    return AdminUser(current_user.user)
