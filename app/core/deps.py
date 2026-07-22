@@ -5,6 +5,7 @@ from sanic.request import Request
 
 from app.account.models import Account
 from app.account.repo import AccountRepository
+from app.account.services import AccountService
 from app.auth.deps import get_current_user
 from app.auth.repo import RevokedTokenRepository
 from app.auth.services import AuthService
@@ -22,8 +23,13 @@ from app.user.service import UserService
 async def provide_session(
     request: Request,
 ) -> AsyncSession:
-    return request.ctx.session
+    session = getattr(request.ctx, "session", None)
 
+    if session is None:
+        session = request.app.ctx.db.session_factory()
+        request.ctx.session = session
+
+    return session
 
 def setup_dependencies(app: Sanic):
     ext: Extend = app.ext
@@ -73,6 +79,10 @@ def setup_dependencies(app: Sanic):
 
     ext.add_dependency(
         UserService,
+    )
+
+    ext.add_dependency(
+        AccountService,
     )
 
     ext.add_dependency(
