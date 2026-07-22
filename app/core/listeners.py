@@ -4,7 +4,7 @@ from sanic import Sanic
 
 from app.core.config import settings
 from app.core.database import Database
-
+from app.core.scheduler import init_scheduler
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +12,8 @@ def setup_listeners(app: Sanic):
 
     @app.before_server_start
     async def startup(app: Sanic):
+        # to expire revoked jwt tokens
+        init_scheduler(app)
 
         db = Database(settings.db)
 

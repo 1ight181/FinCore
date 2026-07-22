@@ -35,8 +35,7 @@ def create_app() -> Sanic:
     setup_listeners(app)
     setup_dependencies(app)
 
-    # to expire revoked jwt tokens
-    init_scheduler(app)
+    logger.info("Creating Sanic application")
 
     return app
 
