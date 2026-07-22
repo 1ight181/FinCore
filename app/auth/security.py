@@ -11,10 +11,9 @@ from app.core.config import settings
 from pwdlib import PasswordHash
 
 
-
 def create_access_token(subject: str, expires_delta: timedelta | None = None) -> str:
     if expires_delta is None:
-        expires_delta = settings.access_token_expire_minutes
+        expires_delta = timedelta(minutes=settings.access_token_expire_minutes)
 
     expire = datetime.now(UTC) + expires_delta
     jti = str(uuid4())
