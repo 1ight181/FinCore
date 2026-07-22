@@ -15,7 +15,7 @@ async def get_current_user(
     request: Request,
     user_service: UserService,
     auth_service: AuthService,
-) -> User:
+) -> CurrentUser:
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
         raise Unauthorized("Missing or invalid authorization header")
@@ -45,7 +45,7 @@ async def get_current_user(
     if is_token_revoked:
         raise Unauthorized("Token revoked")
 
-    return user
+    return CurrentUser(user)
 
 
 async def require_admin(
