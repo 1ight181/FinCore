@@ -14,7 +14,17 @@ from app.user.routers import user_bp
 logger = logging.getLogger(__name__)
 
 def create_app() -> Sanic:
+
     app = Sanic("FinCore")
+
+    app.config.OAS_UI_DEFAULT = "swagger"
+    ext: Extend = app.ext
+    ext.openapi.add_security_scheme(
+        "bearerAuth",
+        "http",
+        scheme="bearer",
+        bearer_format="JWT",
+    )
 
     setup_logger()
 

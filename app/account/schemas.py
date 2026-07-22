@@ -1,24 +1,40 @@
+from typing import ClassVar
 from uuid import UUID
 
 from pydantic import Field
 from datetime import datetime
 from decimal import Decimal
 
-from pydantic import ConfigDict, BaseModel
+from pydantic import BaseModel
 
-from app.payment.schemas import PaymentResponse
+from app.core.schemas import FromAttributes
+from app.payment.schemas import PaymentResponse, PaymentResponseDocModel
 
 
-class AccountResponse(BaseModel):
+class AccountResponse(FromAttributes):
     id: UUID
     user_id: UUID
-    balance: Decimal = Field(..., ge=0)
+    balance: Decimal = Field(..., ge=0, json_schema_extra={
+            "example": "1000.10"
+        })
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
+class AccountResponseDocModel(BaseModel):
+    id: UUID
+    user_id: UUID
+    balance: Decimal = Field(..., ge=0, json_schema_extra={
+        "example": "1000.10"
+    })
+    created_at: datetime
 
 class AccountResponseWithPayments(AccountResponse):
     payments: list[PaymentResponse]
 
+class AccountResponseWithPaymentsDocModel(AccountResponseDocModel):
+    payments: list[PaymentResponseDocModel]
+
 class AccountListResponse(BaseModel):
     accounts: list[AccountResponse]
+
+class AccountListResponseDocModel(BaseModel):
+    accounts: list[AccountResponseDocModel]
