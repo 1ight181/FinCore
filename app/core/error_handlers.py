@@ -2,7 +2,7 @@ import logging
 
 from jwt import InvalidTokenError
 from pydantic import ValidationError
-from sanic import Sanic, json, Forbidden, Unauthorized
+from sanic import Sanic, json, Forbidden, Unauthorized, NotFound
 from sqlalchemy.exc import IntegrityError
 
 from app.core.exceptions import EntityNotFoundError, EntityAlreadyExistsError
@@ -52,8 +52,8 @@ def setup_error_handlers(app: Sanic) -> None:
 
     @app.exception(EntityAlreadyExistsError)
     async def entity_already_exists(
-            _,
-            exception,
+        _,
+        exception,
     ):
         return json(
             {
@@ -75,8 +75,8 @@ def setup_error_handlers(app: Sanic) -> None:
 
     @app.exception(IntegrityError)
     async def handle_integrity_error(
-            _,
-            exception,
+        _,
+        exception,
     ):
         logger.exception(
             "Unhandled database integrity error",
@@ -91,7 +91,10 @@ def setup_error_handlers(app: Sanic) -> None:
         )
 
     @app.exception(InvalidPaymentSignatureError)
-    async def handle_invalid_payment_signature():
+    async def handle_invalid_payment_signature(
+        _,
+        __,
+    ):
         return json(
             {
                 "error": "invalid_payment_signature",
@@ -102,8 +105,8 @@ def setup_error_handlers(app: Sanic) -> None:
 
     @app.exception(ValidationError)
     async def handle_validation_error(
-            _,
-            exception: ValidationError,
+        _,
+        exception: ValidationError,
     ):
         return json(
             {
@@ -128,8 +131,8 @@ def setup_error_handlers(app: Sanic) -> None:
 
     @app.exception(Unauthorized)
     async def handle_unauthorized(
-            _,
-            exception: Unauthorized,
+        _,
+        exception: Unauthorized,
     ):
         return json(
             {
@@ -141,8 +144,8 @@ def setup_error_handlers(app: Sanic) -> None:
 
     @app.exception(Forbidden)
     async def handle_forbidden(
-            _,
-            exception: Forbidden,
+        _,
+        exception: Forbidden,
     ):
         return json(
             {
