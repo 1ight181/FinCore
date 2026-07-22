@@ -71,9 +71,15 @@ async def logout(
     _: CurrentUser,
     auth_service: AuthService,
 ):
-    auth_header = request.headers.get(
-        "Authorization"
-    )
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return json(
+            {
+                "error": "unauthorized",
+                "message": "Missing or invalid authorization header",
+            },
+            status=status.HTTP_401_UNAUTHORIZED,
+        )
 
     token = auth_header.split(" ")[1]
 
