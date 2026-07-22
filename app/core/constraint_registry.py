@@ -1,4 +1,4 @@
-from sqlalchemy import UniqueConstraint, Table
+from sqlalchemy import Index, UniqueConstraint, Table
 
 from app.core.models import BaseModel
 
@@ -27,6 +27,13 @@ class ConstraintRegistry:
                 result[constraint.name] = [
                     column.name
                     for column in constraint.columns
+                ]
+
+        for index in table.indexes:
+            if index.unique and index.name:
+                result[index.name] = [
+                    column.name
+                    for column in index.columns
                 ]
 
         return result
