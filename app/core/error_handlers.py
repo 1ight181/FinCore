@@ -102,7 +102,7 @@ def setup_error_handlers(app: Sanic) -> None:
         )
 
     @app.exception(InvalidTokenError)
-    async def handle_validation_error(
+    async def handle_invalid_token_error(
             _,
             exception: InvalidTokenError,
     ):
