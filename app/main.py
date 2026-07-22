@@ -1,15 +1,15 @@
 import logging
 
 from sanic import Sanic
+from sanic_ext import Extend
 
 from app.auth.routers import auth_bp
 from app.core.deps import setup_dependencies
 from app.core.listeners import setup_listeners
 from app.core.logger import setup_logger
 from app.core.middleware import setup_middlewares
-from app.core.scheduler import init_scheduler
-from app.user.routers import user_bp
-
+from app.user.routers import user_bp, admin_bp
+from app.payment.routers import payment_bp
 
 logger = logging.getLogger(__name__)
 
@@ -42,3 +42,13 @@ def create_app() -> Sanic:
     return app
 
 
+app = create_app()
+
+
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=8000,
+        debug=True,
+        auto_reload=True,
+    )
