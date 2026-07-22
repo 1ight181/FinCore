@@ -4,7 +4,8 @@ from uuid import UUID
 from app.account.models import Account
 from app.account.repo import AccountRepository
 from app.auth.security import hash_password
-from app.core.exceptions import UserNotFoundError
+from app.core.transaction_manager import TransactionManager
+from app.user.exceptions import UserNotFoundError
 from app.user.models import User
 from app.user.repo import UserRepository
 from app.user.schemas import AdminCreateUserRequest, UserUpdateRequest
@@ -67,7 +68,7 @@ class UserService:
 
         return user
 
-    async def delete_user(self, user_id: UUID, current_user: User):
+    async def delete_user(self, user_id: UUID, _: User):
         was_deleted = await self.user_repo.delete(user_id)
 
         if not was_deleted:
