@@ -4,9 +4,9 @@ from app.core.models import BaseModel
 
 
 class ConstraintRegistry:
-    unique_constraints: dict[str, list[str]]
 
     def __init__(self, models: list[type[BaseModel]]):
+        self.unique_constraints: dict[str, list[str]] = dict()
 
         for model in models:
             self.unique_constraints.update(self._build_unique_constraint_map(model))
