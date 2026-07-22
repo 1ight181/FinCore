@@ -13,7 +13,7 @@ def setup_listeners(app: Sanic):
     @app.before_server_start
     async def startup(app: Sanic):
 
-        db = Database(settings.database)
+        db = Database(settings.db)
 
         try:
             await db.health_check()
