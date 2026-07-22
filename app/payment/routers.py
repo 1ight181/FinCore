@@ -1,11 +1,11 @@
 from uuid import UUID
 
 from sanic import Blueprint, Request, json
+from sanic_ext import openapi
 
-from app.auth.types import CurrentUser
 from app.payment.schemas import (
     WebhookPaymentRequest,
-    WebhookSuccessResponse, PaymentResponse, PaymentListResponse,
+    WebhookSuccessResponse, WebhookPaymentRequestDocModel,
 )
 from app.payment.service import PaymentService
 from app.core.transaction_manager import TransactionManager
@@ -16,70 +16,56 @@ payment_bp = Blueprint(
     url_prefix="/payment",
 )
 
-@payment_bp.get("/<payment_id:uuid>")
-async def get_payment(
-    _,
-    payment_id: UUID,
-    service: PaymentService,
-):
-
-    payment = await service.get_by_id(
-        payment_id
-    )
-
-    return json(
-        PaymentResponse
-        .model_validate(payment)
-        .model_dump(mode="json")
-    )
-
-@payment_bp.get("/me")
-async def get_my_payments(
-    _,
-    current_user: CurrentUser,
-    service: PaymentService,
-):
-
-    payments = await service.get_user_payments(
-        current_user.id
-    )
-
-    return json(
-        PaymentListResponse(
-            payments=[
-                PaymentResponse.model_validate(p)
-                for p in payments
-            ]
-        )
-        .model_dump(mode="json")
-    )
-
 
 @payment_bp.post("/webhook")
+@openapi.summary("Process payment webhook")
+@openapi.description(
+    """
+    Processes incoming payment notification.
+
+    The endpoint receives payment information from an external payment provider,
+    updates account balance and returns transaction result.
+    """
+)
+@openapi.body(
+    {
+        "application/json": WebhookPaymentRequestDocModel
+    },
+    description="Payment webhook payload"
+)
+@openapi.response(
+    200,
+    {
+        "application/json": WebhookSuccessResponse
+    },
+    description="Payment successfully processed"
+)
+@openapi.response(
+    400,
+    description="Invalid webhook payload"
+)
+@openapi.response(
+    409,
+    description="Payment already processed"
+)
 async def payment_webhook(
     request: Request,
     service: PaymentService,
     transaction: TransactionManager,
 ):
-
     data = WebhookPaymentRequest.model_validate(
         request.json
     )
 
-
     async with transaction.begin():
-
         payment = await service.process_webhook(
             data
         )
-
 
     return json(
         WebhookSuccessResponse(
             transaction_id=payment.transaction_id,
             new_balance=payment.account.balance,
         )
-        .model_dump(
-            mode="json"
-        )
+        .model_dump(mode="json")
     )
