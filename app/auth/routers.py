@@ -1,6 +1,5 @@
 from sanic import Blueprint, json, empty
 from sanic_ext import openapi
-from starlette import status
 
 from app.auth.schemas import LoginRequest, TokenResponse
 from app.auth.services import AuthService
@@ -78,7 +77,7 @@ async def logout(
                 "error": "unauthorized",
                 "message": "Missing or invalid authorization header",
             },
-            status=status.HTTP_401_UNAUTHORIZED,
+            status=401,
         )
 
     token = auth_header.split(" ")[1]
@@ -86,6 +85,6 @@ async def logout(
     await auth_service.logout(token)
 
     return empty(
-        status=status.HTTP_200_OK,
+        status=200,
     )
 

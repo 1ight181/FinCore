@@ -2,7 +2,6 @@ from uuid import UUID
 
 from sanic import Blueprint, json, empty
 from sanic_ext import openapi
-from starlette import status
 
 from app.account.services import AccountService
 from app.auth.types import CurrentUser, AdminUser
@@ -179,7 +178,7 @@ async def create_user(
         UserResponse.model_validate(user).model_dump(
             mode="json"
         ),
-        status=status.HTTP_201_CREATED,
+        status=201,
     )
 
 
@@ -343,5 +342,5 @@ async def delete_user(
     )
 
     return empty(
-        status=status.HTTP_204_NO_CONTENT,
+        status=204,
     )
