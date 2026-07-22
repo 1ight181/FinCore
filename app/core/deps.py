@@ -6,10 +6,10 @@ from sanic.request import Request
 from app.account.models import Account
 from app.account.repo import AccountRepository
 from app.account.services import AccountService
-from app.auth.deps import get_current_user
+from app.auth.deps import get_current_user, require_admin
 from app.auth.repo import RevokedTokenRepository
 from app.auth.services import AuthService
-from app.auth.types import CurrentUser
+from app.auth.types import AdminUser, CurrentUser
 from app.core.constraint_registry import ConstraintRegistry
 from app.core.transaction_manager import TransactionManager
 from app.payment.models import Payment
@@ -88,4 +88,9 @@ def setup_dependencies(app: Sanic):
     ext.add_dependency(
         CurrentUser,
         get_current_user,
+    )
+
+    ext.add_dependency(
+        AdminUser,
+        require_admin,
     )
