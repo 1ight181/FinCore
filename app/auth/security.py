@@ -3,7 +3,6 @@ from uuid import uuid4
 import jwt
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from datetime import datetime, timedelta, UTC
-from typing import Dict
 from sanic.exceptions import Unauthorized
 
 from app.core.config import settings
@@ -24,7 +23,7 @@ def create_access_token(subject: str, expires_delta: timedelta | None = None) ->
         "jti": jti
     }
 
-    token = jwt.encode(to_encode, settings.SECRET_KEY, algorithm="HS256")
+    token = jwt.encode(to_encode, settings.jwt_secret_key, algorithm="HS256")
     return token
 
 
@@ -32,7 +31,7 @@ def decode_access_token(token: str) -> dict:
     try:
         payload = jwt.decode(
             token,
-            settings.SECRET_KEY,
+            settings.jwt_secret_key,
             algorithms=["HS256"]
         )
 
