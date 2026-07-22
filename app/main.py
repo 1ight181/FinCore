@@ -5,6 +5,7 @@ from sanic_ext import Extend
 
 from app.auth.routers import auth_bp
 from app.core.deps import setup_dependencies
+from app.core.error_handlers import setup_error_handlers
 from app.core.listeners import setup_listeners
 from app.core.logger import setup_logger
 from app.core.middleware import setup_middlewares
@@ -36,6 +37,7 @@ def create_app() -> Sanic:
     setup_middlewares(app)
     setup_listeners(app)
     setup_dependencies(app)
+    setup_error_handlers(app)
 
     logger.info("Creating Sanic application")
 
