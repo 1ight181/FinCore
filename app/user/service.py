@@ -16,24 +16,25 @@ class UserService:
         self.user_repo = user_repo
         self.account_repo = account_repo
 
-    async def create_user(self, data: AdminCreateUserRequest) -> User:
-        password_hash = hash_password(data.password)
+    async def create_user(self, data: AdminCreateUserRequest, transaction_manager: TransactionManager) -> User:
+        async with transaction_manager.begin():
+            password_hash = hash_password(data.password)
 
-        user = User(
-            email=data.email,
-            full_name=data.full_name,
-            password_hash=password_hash,
-        )
+            user = User(
+                email=data.email,
+                full_name=data.full_name,
+                password_hash=password_hash,
+            )
 
-        await self.user_repo.create(user)
+            await self.user_repo.create(user)
 
-        account = Account(
-            user_id=user.id,
-            balance=Decimal("0")
-        )
-        await self.account_repo.create(account)
+            account = Account(
+                user_id=user.id,
+                balance=Decimal("0")
+            )
+            await self.account_repo.create(account)
 
-        return user
+            return user
 
     async def get_by_id(self, user_id: UUID) -> User | None:
         return await self.user_repo.get_by_id(user_id)
