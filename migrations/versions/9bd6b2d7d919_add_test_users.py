@@ -1,20 +1,21 @@
 """add test users
 
-Revision ID: 6788aae3e786
-Revises: 82246d206c50
-Create Date: 2026-07-22 17:03:16.358433
+Revision ID: 9bd6b2d7d919
+Revises: 8d27372d3963
+Create Date: 2026-07-22 23:49:24.370857
 
 """
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import bindparam
 
-from build.lib.app.auth.security import hash_password
+from app.auth.security import hash_password
 
 # revision identifiers, used by Alembic.
-revision: str = '6788aae3e786'
-down_revision: Union[str, Sequence[str], None] = '82246d206c50'
+revision: str = '9bd6b2d7d919'
+down_revision: Union[str, Sequence[str], None] = '8d27372d3963'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -85,13 +86,20 @@ def downgrade() -> None:
     op.execute(
         sa.text(
             "DELETE FROM accounts WHERE id = :id"
-        ).bindparams(id=ACCOUNT_ID)
+        ).bindparams(
+            bindparam("id", type_=sa.UUID())
+        ).params(
+            id=ACCOUNT_ID
+        )
     )
 
     op.execute(
         sa.text(
             "DELETE FROM users WHERE id IN (:user_id, :admin_id)"
         ).bindparams(
+            bindparam("user_id", type_=sa.UUID()),
+            bindparam("admin_id", type_=sa.UUID()),
+        ).params(
             user_id=USER_ID,
             admin_id=ADMIN_ID,
         )
