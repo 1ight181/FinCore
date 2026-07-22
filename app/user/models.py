@@ -32,7 +32,13 @@ class User(BaseModel, TimestampMixin):
 
 
     role: Mapped[UserRole] = mapped_column(
-        SQLEnum(UserRole),
+        SQLEnum(
+            UserRole,
+            name="userrole",
+            values_callable=lambda enum_cls: [
+                item.value for item in enum_cls
+            ],
+        ),
         default=UserRole.USER,
         name = "user_role"
     )
