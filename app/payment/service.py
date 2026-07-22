@@ -115,7 +115,7 @@ class PaymentService:
             f"{data.amount}"
             f"{data.transaction_id}"
             f"{data.user_id}"
-            f"{settings.secret_key}"
+            f"{settings.webhook_secret_key}"
         )
 
 
