@@ -17,6 +17,13 @@ class DatabaseConfig(BaseSettings):
         )
 
 
+class AppConfig(BaseSettings):
+    host: str = "0.0.0.0"
+    port: int = 8000
+    debug: bool = True
+    auto_reload: bool = True
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -34,6 +41,7 @@ class Settings(BaseSettings):
     jwt_scheduler_task_interval_hours: int = 1
 
     db: DatabaseConfig
+    app: AppConfig = AppConfig()
 
 settings = Settings()
 

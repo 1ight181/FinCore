@@ -4,6 +4,7 @@ from sanic import Sanic
 from sanic_ext import Extend
 
 from app.auth.routers import auth_bp
+from app.core.config import settings
 from app.core.deps import setup_dependencies
 from app.core.error_handlers import setup_error_handlers
 from app.core.listeners import setup_listeners
@@ -49,8 +50,8 @@ app = create_app()
 
 if __name__ == "__main__":
     app.run(
-        host="0.0.0.0",
-        port=8000,
-        debug=True,
-        auto_reload=True,
+        host=settings.app.host,
+        port=settings.app.port,
+        debug=settings.debug,
+        auto_reload=settings.app.auto_reload,
     )

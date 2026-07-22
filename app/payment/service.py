@@ -95,19 +95,15 @@ class PaymentService:
 
             await self.account_repo.create(account)
 
-
         payment = Payment(
             transaction_id=data.transaction_id,
             account_id=account.id,
             amount=data.amount,
         )
 
-
         await self.payment_repo.create(payment)
 
-
         account.balance += data.amount
-
 
         return payment
 
