@@ -1,5 +1,6 @@
 from decimal import Decimal
 from typing import TYPE_CHECKING
+from uuid import UUID
 
 from sqlalchemy import (
     ForeignKey,
@@ -25,7 +26,7 @@ class Payment(BaseModel, TimestampMixin):
     )
 
 
-    account_id: Mapped[int] = mapped_column(
+    account_id: Mapped[UUID] = mapped_column(
         ForeignKey(
             "accounts.id",
             ondelete="CASCADE"
