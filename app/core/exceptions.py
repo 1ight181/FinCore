@@ -21,7 +21,7 @@ class EntityNotFoundError(Exception):
 
     def _build_message(self) -> str:
         if self.entity_id is not None:
-            return f"{self.entity_type} with id '{self.entity_id}' not found"
+            return f"{self.entity_type.__name__} with id '{self.entity_id}' not found"
         return f"{self.entity_type} not found"
 
     def to_dict(self) -> dict:
