@@ -81,7 +81,3 @@ class UserListResponse(BaseModel):
 class UserListResponseDocModel(BaseModel):
     users: list[UserWithAccountsResponseDocModel]
     total: int
-
-
-class AdminUpdateUserRequest(UserUpdateRequest):
-    role: UserRole | None = None
