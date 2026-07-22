@@ -150,7 +150,7 @@ activemq-data/
 *.sage.py
 
 # Environments
-.env
+app/.env
 .envrc
 .venv
 env/
@@ -244,7 +244,6 @@ Desktop.ini
 # Linux
 *~
 
-.env
 .env.*
 !.env.example
 
@@ -266,9 +265,6 @@ credentials/
 
 
 logs/
-*.log
-
-*.pid
 *.pid.lock
 
 tmp/
@@ -276,8 +272,6 @@ temp/
 .cache/
 
 
-.pytest_cache/
-htmlcov/
 benchmark/
 benchmarks/
 
@@ -295,7 +289,6 @@ docs/_site/
 data/
 storage/
 uploads/
-downloads/
 
 
 docker-compose.override.yml
