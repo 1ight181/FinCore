@@ -25,6 +25,18 @@ def setup_error_handlers(app: Sanic) -> None:
             status=500,
         )
 
+    @app.exception(NotFound)
+    async def handle_not_found_error(_, exception):
+        logger.error(
+            "Not found error",
+            exc_info=exception,
+        )
+
+        return json(
+            {"message": "Not Found"},
+            status=404,
+        )
+
     @app.exception(EntityNotFoundError)
     async def entity_not_found(
         _,
