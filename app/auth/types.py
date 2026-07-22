@@ -1,13 +1,13 @@
-from typing import NewType
+from dataclasses import dataclass
 
 from app.user.models import User
 
-CurrentUser = NewType(
-    "CurrentUser",
-    User,
-)
 
-AdminUser = NewType(
-    "AdminUser",
-    User,
-)
+@dataclass
+class CurrentUser:
+    user: User
+
+
+@dataclass
+class AdminUser:
+    user: User
