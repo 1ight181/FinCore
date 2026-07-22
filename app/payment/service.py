@@ -76,7 +76,6 @@ class PaymentService:
             data.account_id
         )
 
-
         if not account:
 
             account = Account(
