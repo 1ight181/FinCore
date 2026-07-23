@@ -16,26 +16,25 @@ class UserService:
         self.user_repo = user_repo
         self.account_repo = account_repo
 
-    async def create_user(self, data: UserCreateRequest, transaction_manager: TransactionManager) -> User:
-        async with transaction_manager.begin():
-            password_hash = hash_password(data.password)
+    async def create_user(self, data: UserCreateRequest) -> User:
+        password_hash = hash_password(data.password)
 
-            user = User(
-                email=data.email,
-                full_name=data.full_name,
-                password_hash=password_hash,
-                role=data.role,
-            )
+        user = User(
+            email=data.email,
+            full_name=data.full_name,
+            password_hash=password_hash,
+            role=data.role,
+        )
 
-            await self.user_repo.create(user)
+        await self.user_repo.create(user)
 
-            account = Account(
-                user_id=user.id,
-                balance=Decimal("0")
-            )
-            await self.account_repo.create(account)
+        account = Account(
+            user_id=user.id,
+            balance=Decimal("0")
+        )
+        await self.account_repo.create(account)
 
-            return user
+        return user
 
     async def get_by_id(self, user_id: UUID) -> User | None:
         return await self.user_repo.get_by_id(user_id)
@@ -52,7 +51,8 @@ class UserService:
             data: UserUpdateRequest,
     ):
         values = data.model_dump(
-            exclude_unset=True
+            exclude_unset=True,
+            exclude_none=True,
         )
 
         if "password" in values:
@@ -70,7 +70,7 @@ class UserService:
 
         return user
 
-    async def delete_user(self, user_id: UUID, _: User):
+    async def delete_user(self, user_id: UUID):
         was_deleted = await self.user_repo.delete(user_id)
 
         if not was_deleted:
