@@ -12,12 +12,16 @@ class TransactionManager:
 
     @asynccontextmanager
     async def begin(self):
-        try:
-            async with self.session.begin():
+        if self.session.in_transaction():
+            try:
                 yield
-        except:
-            logger.exception(
-                "Transaction failed, rollback"
-            )
-            await self.session.rollback()
-            raise
+            except Exception:
+                logger.exception(
+                    "Transaction failed, rollback"
+                )
+                await self.session.rollback()
+                raise
+            return
+
+        async with self.session.begin():
+            yield
