@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sanic import Blueprint, json, empty
+from sanic import Blueprint, json, empty, Forbidden
 from sanic_ext import openapi
 
 from app.account.services import AccountService
@@ -11,13 +11,11 @@ from app.user.exceptions import UserNotFoundError
 from app.user.schemas import (
     UserResponse,
     UserListResponse,
-    UserWithAccountsResponse,    UserUpdateRequest, UserCreateRequest, UserCreateRequestDocModel, UserListResponseDocModel,
-    UserWithAccountsResponseDocModel,
+    UserWithAccountsResponse, UserUpdateRequest, UserCreateRequest, UserCreateRequestDocModel, UserListResponseDocModel,
+    UserWithAccountsResponseDocModel, UserResponseDocModel,
 )
 from app.account.schemas import AccountListResponse, AccountListResponseDocModel
 from app.payment.schemas import PaymentListResponse, PaymentResponse, PaymentListResponseDocModel
-
-from app.user.models import User
 from app.user.service import UserService
 
 
@@ -36,7 +34,7 @@ user_bp = Blueprint(
 @openapi.response(
     200,
     {
-        "application/json": UserResponse
+        "application/json": UserResponseDocModel
     },
     description="Current user information"
 )
@@ -48,8 +46,9 @@ async def get_me(
     _,
     current_user: CurrentUser,
 ):
+    user_dump = UserResponse.model_validate(current_user.user).model_dump(mode="json")
     return json(
-        UserResponse.model_validate(current_user).model_dump()
+        user_dump
     )
 
 
@@ -146,7 +145,7 @@ admin_bp = Blueprint(
 @openapi.response(
     201,
     {
-        "application/json": UserResponse
+        "application/json": UserResponseDocModel
     },
     description="User successfully created"
 )
@@ -160,7 +159,6 @@ admin_bp = Blueprint(
 )
 async def create_user(
     request,
-    _: User,
     user_service: UserService,
     __: AdminUser,
     transaction_manager: TransactionManager,
@@ -168,11 +166,11 @@ async def create_user(
     data = UserCreateRequest.model_validate(
         request.json
     )
-
-    user = await user_service.create_user(
-        data,
-        transaction_manager
-    )
+    
+    async with transaction_manager.begin():
+        user = await user_service.create_user(
+            data,
+        )
 
     return json(
         UserResponse.model_validate(user).model_dump(
@@ -247,11 +245,10 @@ async def get_users(
 async def get_user(
     _,
     user_id: UUID,
-    __: User,
     user_service: UserService,
     ___: AdminUser,
 ):
-    user = await user_service.get_by_id(user_id)
+    user = await user_service.get_by_id_with_accounts_and_payments(user_id)
     if not user:
         raise UserNotFoundError(user_id)
 
@@ -276,7 +273,7 @@ async def get_user(
 @openapi.response(
     200,
     {
-        "application/json": UserResponse
+        "application/json": UserResponseDocModel
     },
     description="User successfully updated"
 )
@@ -294,8 +291,9 @@ async def update_user(
     user_service: UserService,
     _: AdminUser,
 ):
+    raw_data = request.json
     data = UserUpdateRequest.model_validate(
-        request.json
+        raw_data,
     )
 
     user = await user_service.update_user(
@@ -331,13 +329,11 @@ async def update_user(
 async def delete_user(
     _,
     user_id: UUID,
-    current_user: User,
     user_service: UserService,
-    __: AdminUser,
+    current_user: AdminUser,
 ):
     await user_service.delete_user(
         user_id,
-        current_user,
     )
 
     return empty(
