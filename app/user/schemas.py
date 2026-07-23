@@ -9,16 +9,6 @@ from app.user.role import UserRole
 
 
 # common user
-class UserBase(BaseModel):
-    email: str
-    full_name: str = Field(..., min_length=1, max_length=255)
-
-    @field_validator("email")
-    @classmethod
-    def validate_email(cls, value):
-        validate_email(value)
-        return value
-
 
 class UserCreateRequest(FromAttributes):
     email: str
@@ -61,10 +51,33 @@ class UserUpdateRequest(BaseModel):
 
 
 # admin
-class UserResponse(UserBase):
+class UserResponse(FromAttributes):
     id: UUID
     role: UserRole
+    email: str
+    full_name: str = Field(..., min_length=1, max_length=255)
+
     created_at: datetime
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value):
+        validate_email(value)
+        return value
+
+class UserResponseDocModel(BaseModel):
+    id: UUID
+    role: UserRole
+    email: str
+    full_name: str = Field(..., min_length=1, max_length=255)
+
+    created_at: datetime
+
+    @field_validator("email")
+    @classmethod
+    def validate_email(cls, value):
+        validate_email(value)
+        return value
 
 
 class UserWithAccountsResponse(UserResponse):
