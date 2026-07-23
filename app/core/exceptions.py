@@ -53,7 +53,7 @@ class EntityAlreadyExistsError(Exception):
         if self.fields is not None:
             values = ", ".join(
                 f"{field}={value}"
-                for field, value in self.fields
+                for field, value in self.fields.items()
             )
 
             return (
