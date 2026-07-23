@@ -20,15 +20,17 @@ class UserRepository(BaseRepository[User]):
 
         return result.scalar_one_or_none()
 
-
-    async def get_with_accounts_and_payments(self, user_id: UUID) -> User | None:
+    async def get_with_accounts_and_payments(
+            self,
+            user_id: UUID,
+    ) -> User | None:
         result = await self.session.execute(
             select(User)
             .options(joinedload(User.accounts).joinedload(Account.payments))
             .where(User.id == user_id)
         )
 
-        return result.scalar_one_or_none()
+        return result.unique().scalar_one_or_none()
 
     async def get_all_with_accounts_and_payments(self) -> list[User]:
         result = await self.session.execute(
