@@ -51,13 +51,13 @@ payment_bp = Blueprint(
 async def payment_webhook(
     request: Request,
     service: PaymentService,
-    transaction: TransactionManager,
+    transaction_manager: TransactionManager,
 ):
     data = WebhookPaymentRequest.model_validate(
         request.json
     )
 
-    async with transaction.begin():
+    async with transaction_manager.begin():
         payment = await service.process_webhook(
             data
         )
