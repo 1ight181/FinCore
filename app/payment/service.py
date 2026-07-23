@@ -104,7 +104,10 @@ class PaymentService:
             account=account,
         )
 
-        account.balance += payment.amount
+        self.account_repo.add_balance(
+            account.id,
+            payment.amount
+        )
 
         await self.payment_repo.create(payment)
 
