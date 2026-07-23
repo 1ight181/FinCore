@@ -101,11 +101,12 @@ class PaymentService:
             transaction_id=data.transaction_id,
             account_id=account.id,
             amount=data.amount,
+            account=account,
         )
 
-        await self.payment_repo.create(payment)
+        account.balance += payment.amount
 
-        account.balance += data.amount
+        await self.payment_repo.create(payment)
 
         return payment
 
