@@ -332,6 +332,11 @@ async def delete_user(
     user_service: UserService,
     current_user: AdminUser,
 ):
+    if current_user.user.id == user_id:
+        raise Forbidden(
+            "Admin cannot delete himself"
+        )
+
     await user_service.delete_user(
         user_id,
     )
