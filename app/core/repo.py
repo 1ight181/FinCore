@@ -17,7 +17,7 @@ class BaseRepository(Generic[ModelType]):
         self.model = model
         self.constraint_registry = constraint_registry
 
-    async def get_by_id(self, id: UUID):
+    async def get_by_id(self, id: UUID) -> ModelType | None:
         result = await self.session.execute(
             select(self.model).where(self.model.id == id)
         )
